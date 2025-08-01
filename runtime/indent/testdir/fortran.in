@@ -1,0 +1,13 @@
+! vim: set ft=fortran sw=4 et:
+
+! START_INDENT
+! INDENT_EXE let fortran_free_source=1
+program main
+integer :: num = 2
+#define cond num > 2
+if (cond) then
+#undef cond
+print *,"aaa"
+end if
+end program
+! END_INDENT

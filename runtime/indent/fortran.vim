@@ -170,9 +170,24 @@ function FortranGetIndent(lnum)
   return ind
 endfunction
 
+" neither blank nor preprocessor
+function FortranGetPrevLnum(lnum)
+  let lnum = prevnonblank(a:lnum)
+  while getline(lnum) =~ '^\s*#' " preprocessor
+    let lnum = prevnonblank(l:lnum - 1)
+    if lnum == 0
+      return 0
+    endif
+  endwhile
+  return lnum
+endfunction
+
 function FortranGetFreeIndent()
-  "Find the previous non-blank line
-  let lnum = prevnonblank(v:lnum - 1)
+  if getline(v:lnum) =~ '^\s*#' " preprocessor
+    return 0
+  endif
+
+  let lnum = FortranGetPrevLnum(v:lnum - 1)
 
   "Use zero indent at the top of the file
   if lnum == 0
